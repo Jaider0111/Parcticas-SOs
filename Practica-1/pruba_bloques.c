@@ -30,16 +30,16 @@ int main (){
 
     struct viaje reg;
 
-    for (int i = 0; i < 10; i++){
-        fread(&reg, sizeof(struct viaje), 1, infile);
-        printf("%d,%d,%d,%f,%f,%f,%f\n", reg.origen, reg.destino,
-            reg.hora, reg.media, reg.desviacion, reg.med_geo, reg.desv_geo);
-        for (int j = 0; j < 10; j++){
-            fread(&reg, sizeof(struct viaje), 1, infile);
-            printf("%d,%d,%d,%f,%f,%f,%f\n", reg.origen, reg.destino,
-                reg.hora, reg.media, reg.desviacion, reg.med_geo, reg.desv_geo);
-        }
-    }
+    // for (int i = 0; i < 10; i++){
+    //     fread(&reg, sizeof(struct viaje), 1, infile);
+    //     printf("%d,%d,%d,%f,%f,%f,%f\n", reg.origen, reg.destino,
+    //         reg.hora, reg.media, reg.desviacion, reg.med_geo, reg.desv_geo);
+    //     for (int j = 0; j < 10; j++){
+    //         fread(&reg, sizeof(struct viaje), 1, infile);
+    //         printf("%d,%d,%d,%f,%f,%f,%f\n", reg.origen, reg.destino,
+    //             reg.hora, reg.media, reg.desviacion, reg.med_geo, reg.desv_geo);
+    //     }
+    // }
 
     fseek(infile, sizeof(struct viaje)*hash_table[278], SEEK_SET);
     fread(&reg, sizeof(struct viaje), 1, infile);

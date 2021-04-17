@@ -70,5 +70,6 @@ int main (){
     fwrite(hash_table, 1160*sizeof(long), 1, hash);
     fclose(infile);
     fclose(outfile);
+    fclose(hash);
     free(hash_table);
 }

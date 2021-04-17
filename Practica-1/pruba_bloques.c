@@ -12,7 +12,7 @@ struct viaje{
     float desv_geo;
 };
   
-int main (){
+int main(int argc, char *argv[]){
     FILE *infile, *hash;
     infile = fopen ("data_blocks", "r");
     if (infile == NULL){
@@ -29,20 +29,21 @@ int main (){
     fread(hash_table, 1160*sizeof(long), 1, hash);
 
     struct viaje reg;
+    int org = atoi(argv[1]), des = atoi(argv[2]), hor = atoi(argv[3]);
+    printf("%d %d %d\n", org, des, hor);
 
-    // for (int i = 0; i < 10; i++){
-    //     fread(&reg, sizeof(struct viaje), 1, infile);
-    //     printf("%d,%d,%d,%f,%f,%f,%f\n", reg.origen, reg.destino,
-    //         reg.hora, reg.media, reg.desviacion, reg.med_geo, reg.desv_geo);
-    //     for (int j = 0; j < 10; j++){
-    //         fread(&reg, sizeof(struct viaje), 1, infile);
-    //         printf("%d,%d,%d,%f,%f,%f,%f\n", reg.origen, reg.destino,
-    //             reg.hora, reg.media, reg.desviacion, reg.med_geo, reg.desv_geo);
-    //     }
-    // }
+    fseek(infile, sizeof(struct viaje)*hash_table[org-1], SEEK_SET);
 
-    fseek(infile, sizeof(struct viaje)*hash_table[278], SEEK_SET);
     fread(&reg, sizeof(struct viaje), 1, infile);
-    printf("\n%d,%d,%d,%f,%f,%f,%f\n", reg.origen, reg.destino,
-        reg.hora, reg.media, reg.desviacion, reg.med_geo, reg.desv_geo);
+    
+    while (reg.origen == org){
+        if(reg.destino == des && reg.hora == hor) break;
+        fread(&reg, sizeof(struct viaje), 1, infile);
+    }
+    
+    if(reg.origen == org)
+        printf("%d,%d,%d,%.2f,%.2f,%.2f,%.2f\n", reg.origen, reg.destino,
+            reg.hora, reg.media, reg.desviacion, reg.med_geo, reg.desv_geo);
+    else
+        printf("Registro no encontrado\n");
 }

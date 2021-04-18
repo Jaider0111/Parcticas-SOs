@@ -35,7 +35,7 @@ int main () {
     memset(hashtable, -1, 1160*sizeof(long));
 
     // Apertura en modo lectura del archivo csv que contiene los datos en bruto
-    infile = fopen ("bogota-cadastral-2020-1-All-HourlyAggregate.csv?dl=0", "r");
+    infile = fopen ("bogota-cadastral-2020-1-All-HourlyAggregate.csv", "r");
     if (infile == NULL) {
         printf("Error while opening the csv file");
         exit(-1);
@@ -80,6 +80,7 @@ int main () {
 
 	// La variable origen permitira seleccionar los registros con este mismo valor para el origen
         origen = reg.origen;
+	destino = reg.destino;
 
         // Se guarda la actual posicion del cursor para poder volver y se puedan ordenar todos los registros
         fgetpos(infile, &pos);
@@ -91,7 +92,7 @@ int main () {
             fscanf(infile, "%d,%d,%d,%f,%f,%f,%f\n", &nextreg.origen, &nextreg.destino, &nextreg.hora,
                 &nextreg.tvm, &nextreg.dstv, &nextreg.mgtv, &nextreg.dsgtv);
 			
-	    origen_next++;
+	    origen_dest_next++;
 			
             // Se verifica que el origen coincida con el deseado
             if (nextreg.origen == origen)
@@ -109,12 +110,12 @@ int main () {
         fsetpos(infile, &pos);
     }
     // Escritura de la tabla hash en el archivo
-    fwrite(hashtable, 1160*sizeof(long), 1, hashfile);
+    fwrite(hashtable, 1160*sizeof(long), 1, hash);
 
     // Cierre de los archivos usados
     fclose(infile);
     fclose(outfile);
-    fclose(hashfile);
+    fclose(hash);
 
     // Se libera la memoria reservada con hashtable
     free(hashtable);

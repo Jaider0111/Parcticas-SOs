@@ -35,7 +35,7 @@ int main () {
     memset(hashtable, -1, 1160*sizeof(long));
 
     // Apertura en modo lectura del archivo csv que contiene los datos en bruto
-    infile = fopen ("bogota-cadastral-2020-1-All-HourlyAggregate.csv?dl=0", "r");
+    infile = fopen ("file.csv", "r");
     if (infile == NULL) {
         printf("Error while opening the csv file");
         exit(-1);
@@ -67,16 +67,14 @@ int main () {
 	// Lectura de un registro
 	fscanf(infile, "%d,%d,%d,%f,%f,%f,%f\n", &reg.origen, &reg.destino,
 			&reg.hora, &reg.tvm, &reg.dstv, &reg.mgtv, &reg.dsgtv);
-
 	// Verificar si el origen del registro se encuentra en la tabla hash,
 	// Si no es asi se agrega y se realizara el bloque de registros con este origen
 	if (hashtable[reg.origen-1] == -1){
 		hashtable[reg.origen-1] = count;
-		break;
+		
 	}
 		
-        // Verificar que no se haya llegado al final del archivo
-        if (feof(infile)) break;
+	
 
 	// La variable origen permitira seleccionar los registros con este mismo valor para el origen
         origen = reg.origen;

@@ -40,23 +40,6 @@ int main(){
     //pw y pr descriptores de archivo para las 2 tuberias anteriores
     int pw, pr, r, option;
 
-    //Crea la tuberia nombrada pipea
-    r = mkfifo(pipea, PERMISSIONS);
-    if(r < 0){
-        printf("Error creando la tuberia de peticiones\n");
-        exit(-1);
-    }
-
-    //Crea la tuberia nombrada pipeb
-    r = mkfifo(pipeb, PERMISSIONS);
-    if(r < 0){
-        printf("Error creando la tuberia de respuestas\n");
-        exit(-1);
-    }
-
-    //ejecuta el programa que realiza la busqueda en el archivo
-    system("./search&");
-
     //Inicio de la interaccion con el usuario
     printf("Bienvenido\n");
     menu();
@@ -182,8 +165,4 @@ int main(){
         printf("\nBienvenido\n");
         menu();
     }
-
-    //Se borran las tuverias nombradas creadas para la ejecucion
-    unlink(pipea);
-    unlink(pipeb);
 }

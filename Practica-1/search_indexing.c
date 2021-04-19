@@ -9,7 +9,7 @@
 /*Constantes utiles para el programa*/
 #define RES_SIZE 9
 #define REQ_SIZE 13
-#define PERMISSIONS 0666  
+#define PERMISSIONS 0666
 
 //Estructura que contiene los datos de cada registro
 struct viaje{
@@ -20,6 +20,7 @@ struct viaje{
     float desviacion;
     float med_geo;
     float desv_geo;
+    int pos ;
 };
 
 int main(){
@@ -61,13 +62,13 @@ int main(){
     FILE *infile, *hash;
 
     //apertura de los archivos
-    infile = fopen ("data_blocks", "r");
+    infile = fopen ("data_indexing", "r");
     if (infile == NULL){
         printf("Error lectura");
         exit(-1);
     }
     
-    hash = fopen ("tabla_hash", "r");
+    hash = fopen ("tabla_hash_ind", "r");
     if (infile == NULL){
         printf("Error lectura");
         exit(-1);
@@ -103,8 +104,12 @@ int main(){
         //Buscamos el registro que cumpla con el origen, destino y hora dada
         while (reg.origen == data[0]){
             if(reg.destino == data[1] && reg.hora == data[2]) break;
+            if ( reg.pos == -1 ){
+                break ; 
+            }
+            fseek(infile, sizeof(struct viaje)*reg.pos, SEEK_SET);
             fread(&reg, sizeof(struct viaje), 1, infile);
-        }
+        }      
 
         //apertura de la tuberia que enviar el resultado de la busqueda
         pw = open(pipeb, O_WRONLY);

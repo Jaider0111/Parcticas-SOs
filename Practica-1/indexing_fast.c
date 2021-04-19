@@ -46,7 +46,7 @@ int main (){
     }
 
     //Apertura en modo escritura del archivo binario que contendra la tabla hash
-    hash = fopen ("tabla_hash", "w");
+    hash = fopen ("tabla_hash_ind", "w");
     if (outfile == NULL){
         printf("Error archivo tabla hash");
         exit(-1);

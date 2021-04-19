@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <stdbool.h>
 
 // Estructura con la cual se van a almacenar los datos en el archivo binario
 struct viaje {
@@ -63,18 +64,18 @@ int main () {
     struct viaje reg;
 
     while (feof(infile) == 0){
-		
+	
+	origen_next = 0;
+			
 	// Lectura de un registro
 	fscanf(infile, "%d,%d,%d,%f,%f,%f,%f\n", &reg.origen, &reg.destino,
 			&reg.hora, &reg.tvm, &reg.dstv, &reg.mgtv, &reg.dsgtv);
 	// Verificar si el origen del registro se encuentra en la tabla hash,
 	// Si no es asi se agrega y se realizara el bloque de registros con este origen
-	if (hashtable[reg.origen-1] == -1){
+	if (hashtable[reg.origen-1] == -1) {
 		hashtable[reg.origen-1] = count;
 		
 	}
-		
-	
 
 	// La variable origen permitira seleccionar los registros con este mismo valor para el origen
         origen = reg.origen;
@@ -84,6 +85,8 @@ int main () {
 
 	struct viaje nextreg;
 
+	bool x;
+
         while (feof(infile) == 0) {
             // Lectura de un registro
             fscanf(infile, "%d,%d,%d,%f,%f,%f,%f\n", &nextreg.origen, &nextreg.destino, &nextreg.hora,
@@ -92,10 +95,15 @@ int main () {
 	    origen_next++;
 			
             // Se verifica que el origen coincida con el deseado
-            if (nextreg.origen == origen)
+            if (nextreg.origen == origen) {
+		printf("%d %d %d\n", nextreg.origen, count, origen_next);
+		x = true;
 		break;
-			
+	    }
+				
         }
+
+	if (x) break;
 		
 	reg.origen_next = origen_next;
 		

@@ -1,4 +1,4 @@
-indexado: bucador interfaz
+indexado: buscador interfaz
 
 buscador: search_indexing.c tabla_hash_ind data_indexing
 	@sudo gcc -o search_indexing search_indexing.c

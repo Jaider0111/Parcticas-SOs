@@ -1,6 +1,6 @@
 bloques: buscador interfaz
 
-buscador: search.c tabla_hash data_blocks
+buscador: tabla_hash data_blocks search.c
 	@sudo gcc -o search search.c
 	@sudo ./search &
 

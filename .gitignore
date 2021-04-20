@@ -3,4 +3,14 @@ Practica-1/creacion
 Practica-1/.vscode/*
 Practica-1/data_blocks
 Practica-1/prueba
-Practica-1/tabla_hash
+Practica-1/.fuse*
+Practica-1/data_indexing
+Practica-1/indexing_fast
+Practica-1/main
+Practica-1/search
+Practica-1/search
+Practica-1/search_indexing
+Practica-1/search
+Practica-1/main
+Practica-1/MakeFileIndex.mk
+.gitignore

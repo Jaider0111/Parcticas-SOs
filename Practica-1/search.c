@@ -125,6 +125,13 @@ int main(){
         //cierre de la tuberia que enviar el resultado de la busqueda
         close(pw);
     }
+    //Se libera la memoria ocupada por la tabla hash
+    free(hash_table);
+
+    //Cierre de archivos
+    fclose(hash);
+    fclose(infile);
+
     //Se borran las tuverias nombradas creadas para la ejecucion
     unlink(pipea);
     unlink(pipeb);

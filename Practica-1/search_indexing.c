@@ -114,7 +114,7 @@ int main(){
         //apertura de la tuberia que enviar el resultado de la busqueda
         pw = open(pipeb, O_WRONLY);
         //caso en el que se encuantra el registro especificado
-        if(reg.origen == data[0]){
+        if(reg.origen == data[0] && reg.destino == data[1] && reg.hora == data[2]){
             //Escritura de la media del registro en la variable de envio de resultados
             sprintf(response, "%4.2f", reg.media);
             //Envio del resultado en ese registro
@@ -130,6 +130,13 @@ int main(){
         //cierre de la tuberia que enviar el resultado de la busqueda
         close(pw);
     }
+    //Se libera la memoria ocupada por la tabla hash
+    free(hash_table);
+
+    //Cierre de archivos
+    fclose(hash);
+    fclose(infile);
+
     //Se borran las tuverias nombradas creadas para la ejecucion
     unlink(pipea);
     unlink(pipeb);

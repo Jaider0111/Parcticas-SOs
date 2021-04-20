@@ -36,22 +36,25 @@ int main(int argc, char *argv[]){
     fseek(infile, sizeof(struct viaje)*hash_table[org-1], SEEK_SET);
 
     fread(&reg, sizeof(struct viaje), 1, infile);
-	printf ( "%ld\n",hash_table[org-1] );
-	printf ( "%d\n",reg.origen);
     while (reg.origen == org){
+		
+
         if(reg.destino == des && reg.hora == hor) break;
         if ( reg.pos == -1 ){
-			break ; 
-		}
+	    break ; 
+	}
         fseek(infile, sizeof(struct viaje)*reg.pos, SEEK_SET);
         fread(&reg, sizeof(struct viaje), 1, infile);
         
        
     }
     
-    if(reg.origen == org)
+    if(reg.origen == org && reg.destino == des && reg.hora == hor)
         printf("%d,%d,%d,%.2f,%.2f,%.2f,%.2f\n", reg.origen, reg.destino,
-            reg.hora, reg.media, reg.desviacion, reg.med_geo, reg.desv_geo);
+            reg.hora, reg.media, reg.desviacion, reg.med_geo, reg.desv_geo );
     else
         printf("Registro no encontrado\n");
+    fclose ( infile ) ; 
+    fclose (hash ) ; 
 }
+

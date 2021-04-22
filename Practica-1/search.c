@@ -39,6 +39,10 @@ int main(){
     //pw y pr descriptores de archivo para las 2 tuberias anteriores
     int pw, pr, r;
 
+    //Se borran las tuberias nombradas para evitar problemas si estas existen
+    unlink(pipea);
+    unlink(pipeb);
+
     //Crea la tuberia nombrada pipea
     r = mkfifo(pipea, PERMISSIONS);
     if(r < 0){

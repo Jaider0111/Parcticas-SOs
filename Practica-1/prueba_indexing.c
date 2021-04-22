@@ -43,7 +43,7 @@ int main(int argc, char *argv[]){
         if ( reg.pos == -1 ){
 	    break ; 
 	}
-        fseek(infile, sizeof(struct viaje)*reg.pos, SEEK_SET);
+        fseek(infile, sizeof(struct viaje)*reg.pos - ftell ( infile ) , SEEK_CUR);
         fread(&reg, sizeof(struct viaje), 1, infile);
         
        

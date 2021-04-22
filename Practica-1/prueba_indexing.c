@@ -20,7 +20,7 @@ int main(int argc, char *argv[]){
         printf("Error lectura");
         exit(-1);
     }
-    hash = fopen ("tabla_hash", "r");
+    hash = fopen ("tabla_hash_ind", "r");
     if (infile == NULL){
         printf("Error lectura");
         exit(-1);

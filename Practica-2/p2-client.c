@@ -9,6 +9,7 @@
 #include <arpa/inet.h>
 #include <unistd.h>
 #include <string.h>
+#include <termios.h>
 
 #define PORT 3535
 /*Constantes utiles para el programa*/
@@ -166,10 +167,17 @@ int main(){
         //cambiamos el valor de origen, destino y hora a -1 para iniciar una nueva consulta
         memset(data, -1, 3*sizeof(int));
 
-        //Esperamos la accion del usuario para continuar
-        printf("Presione ENTER para continuar");
+        //ESPERAMOS INTERACCION DEL USUARIO
+        static struct termios oldt, newt;
+        printf("Consulta realizada \n\n");
+        printf("Presione cualquier tecla para continuar...\n");
         getchar();
+        tcgetattr( STDIN_FILENO, &oldt);
+        newt = oldt;
+        newt.c_lflag &= ~(ICANON | ECHO );
+        tcsetattr( STDIN_FILENO, TCSANOW, &newt);
         getchar();
+        tcsetattr( STDIN_FILENO, TCSANOW, &oldt);
 
         //lispiamos la pantalla
         system("clear");

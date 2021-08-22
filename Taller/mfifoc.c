@@ -25,15 +25,7 @@ int main() {
         printf("error creating pipeb\n");
 	exit(-1);
     }
-    char *pipec = "/tmp/pipec"; // tercera pipe agregada para ver si así funcionaba pero no
-    unlink(pipec);
-    r = mkfifo(pipec, PERMISSIONS);
-    if (r < 0) {
-        printf("error creating pipec\n");
-	exit(-1);
-    }
-    int pr, pw, psr;
-    char signal[2]; // aquí se guarda el dato recibido por la tercera pipe, actúa como una señal, para que esté proceso vaya en la misma iteración que el productor, pero no funciona
+    int pr, pw;
     int KB = 1024;
     int sizes[] = { KB, 10*KB, 100*KB, KB*KB, 10*KB*KB, 100*KB*KB };
     for (int s = 0; s < 6; s++) {
@@ -41,22 +33,17 @@ int main() {
 	char *data = (char *) malloc(bytes * sizeof(char));
 	int reps = (bytes <= KB*KB) ? 20 : 8;
 	pr = open(pipea, O_RDONLY);	
-	for (int i = 0; i < reps; i++) {
-	    psr = open(pipec, O_RDONLY);
-	    int r = read(psr, signal, 2);
-	    close(psr);
-	    int len;
-	    int received = 0;
-	    while ((len = read(pr, data, bytes)) > 0) { // todos los datos de las 20 u 8 reps se reciben en la primera iteración i de este ciclo, por lo que podía removerse el for, pero tras añadir la segunda pipe dejó de servir
-	        received += len;
-	    }
-	    printf("Received %d\n", received); // esto funcionaba antes de añadir la segunda pipe para enviar la confirmación
-	    pw = open(pipeb, O_WRONLY);
-	    write(pw, "r", 1);
-	    close(pw);
+	int len;
+	int received = 0;
+	while ((len = read(pr, data, bytes)) > 0) {
+	    received += len;
 	}
-	close(pr);
-	free(data);
+	printf("Received %d\n", received);
+	pw = open(pipeb, O_WRONLY);
+	write(pw, "r", 1);
+	close(pw);
+        close(pr);
+        free(data);
     }
     unlink(pipea);
     unlink(pipeb);

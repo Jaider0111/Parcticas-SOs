@@ -47,22 +47,21 @@ int main(){
         char *msg = (char *)malloc(sizeof(char) * size);
 
         //numero de veces que se repitira la recepcion
-        int reps = (size <= 1000000) ? 10 : 5;
+        int reps = (size <= 1000000) ? 20 : 8;
 
         FILE *file;
         char c[2];
+        file =fopen("file", "r");
         for(int i = 0; i < reps; i++){
             pr = open(pipea, O_RDONLY);
             r = read (pr, c, 2);
             close(pr);
-            file =fopen("file", "r");
             int r = fread(msg, sizeof(char) * size, 1, file);
-            //printf("leido: %d\n", r);
-            fclose(file);
             pw = open(pipeb, O_WRONLY);
             write(pw, "r", 1);
             close(pw);
         }
+        fclose(file);
         //Liberacion de la memoria asignada al mensaje
         free(msg);
     }

@@ -31,31 +31,30 @@ int main(){
         }
         //Variables para contar el tiempo
         struct timespec begin, end; 
-        //numero de veces que se repitira la transmicion
-        int reps = (size <= 1000000) ? 10 : 5;
+        //numero de ve10ces que se repitira la transmicion
+        int reps = (size <= 1000000) ? 20 : 8;
         //variable para la suma de los tiempos
         double total_time = 0;
-        long seconds, nanoseconds;
+        long int seconds, nanoseconds;
         //Apuntador al archivo
         FILE *file;
         char c[2];
+        file =fopen("file", "w");
         for(int i = 0; i < reps; i++){
-            file =fopen("file", "w");
+            clock_gettime(CLOCK_REALTIME, &begin);
             int r = fwrite(msg, sizeof(char) * size, 1, file);
-            //printf("escrito: %d\n", r);
-            fclose(file);
-            clock_gettime(CLOCK_REALTIME, &end);
-            seconds = end.tv_sec - begin.tv_sec;
-            nanoseconds = end.tv_nsec - begin.tv_nsec;
-            total_time = seconds + nanoseconds*1e-9;
             pw = open(pipea, O_WRONLY);
             write(pw, "r", 1);
             close(pw);
-            clock_gettime(CLOCK_REALTIME, &begin);
             pr = open(pipeb, O_RDONLY);
             r = read(pr, c, 2);
             close(pr);
+            clock_gettime(CLOCK_REALTIME, &end);
+            seconds = end.tv_sec - begin.tv_sec;
+            nanoseconds = end.tv_nsec - begin.tv_nsec;
+            total_time += seconds + nanoseconds*(1e-9);
         }
+        fclose(file);
         double prom = total_time / reps;
         if(size < 1000000){
             size /= kb;

@@ -47,6 +47,5 @@ int main() {
     }
     unlink(pipea);
     unlink(pipeb);
-    unlink(pipec);
     return 0;
 }

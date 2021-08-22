@@ -47,7 +47,7 @@ int main() {
 	    close(psr);
 	    int len;
 	    int received = 0;
-	    while ((len = read(pr, data, bytes)) > 0) { // todos los datos de las 20 u 8 reps se reciben en la primera iteración i de este ciclo, por lo que podía removerse, pero tras añadir la segunda pipe dejó de servir
+	    while ((len = read(pr, data, bytes)) > 0) { // todos los datos de las 20 u 8 reps se reciben en la primera iteración i de este ciclo, por lo que podía removerse el for, pero tras añadir la segunda pipe dejó de servir
 	        received += len;
 	    }
 	    printf("Received %d\n", received); // esto funcionaba antes de añadir la segunda pipe para enviar la confirmación

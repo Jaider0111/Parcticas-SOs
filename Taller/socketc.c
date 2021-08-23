@@ -66,7 +66,7 @@ int main() {
 	int bytes = sizes[s];
 	char *data = (char *) malloc(bytes * sizeof(char));
 	int reps = (bytes <= KB*KB) ? 20 : 8;
-	pr = open(pipea, O_RDONLY);	
+	//pr = open(pipea, O_RDONLY);	
 	int len;
 	int received = 0;
 	while ((len = recv(clientfd, data, bytes, 0)) > 0) {

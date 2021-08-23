@@ -45,7 +45,7 @@ int main() {
         int reps = (bytes <= KB*KB) ? 20 : 8;
 	double total_time;
 	long int secs, nsecs;
-	pw = open(pipea, O_WRONLY);
+	//pw = open(pipea, O_WRONLY);
 	clock_gettime(CLOCK_REALTIME, &begin);
 	for (int i = 0; i < reps; i++) {	
 	    r = send(clientfd, &data, bytes, 0); // envío de los datos

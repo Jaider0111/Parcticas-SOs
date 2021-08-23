@@ -80,7 +80,7 @@ int main() {
         close(pr);
         free(data);
     }
-    unlink(pipea);
+    //unlink(pipea);
     unlink(pipeb);
     return 0;
 }

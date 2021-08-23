@@ -39,10 +39,11 @@ int main(){
         //Apuntador al archivo
         FILE *file;
         char c[2];
-        file =fopen("file", "w");
         for(int i = 0; i < reps; i++){
             clock_gettime(CLOCK_REALTIME, &begin);
+            file =fopen("file", "w");
             int r = fwrite(msg, sizeof(char) * size, 1, file);
+            fclose(file);
             pw = open(pipea, O_WRONLY);
             write(pw, "r", 1);
             close(pw);
@@ -54,7 +55,6 @@ int main(){
             nanoseconds = end.tv_nsec - begin.tv_nsec;
             total_time += seconds + nanoseconds*(1e-9);
         }
-        fclose(file);
         double prom = total_time / reps;
         if(size < 1000000){
             size /= kb;

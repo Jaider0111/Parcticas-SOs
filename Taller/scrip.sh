@@ -1,5 +1,7 @@
 #!/bin/bash
 echo -e "\n\nTransferencia usando tuberias sin nombre"
+gcc pipes.c -o pipes -lm
+sudo ./pipes
 echo -e "\nTransferencia usando tuberias nombradas"
 gcc mfifop.c -o mfifop -lpthread -lm
 gcc mfifoc.c -o mfifoc -lm

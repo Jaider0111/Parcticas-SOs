@@ -40,6 +40,8 @@ int main(){
     int kb = 1024;
     //tamaños
     int sizes[] = {kb, 10*kb, 100*kb, kb*kb, 10*kb*kb, 100*kb*kb};
+    FILE *file;
+    file = fopen("file", "r");
     for(int j = 0; j < 6; j++){
         //Determina el tamaño de los datos a transmitir
         int size = sizes[j];
@@ -49,15 +51,13 @@ int main(){
         //numero de veces que se repitira la recepcion
         int reps = (size <= 1000000) ? 20 : 8;
 
-        FILE *file;
         char c[2];
         for(int i = 0; i < reps; i++){
             pr = open(pipea, O_RDONLY);
             r = read (pr, c, 2);
             close(pr);
-            file =fopen("file", "r");
             int r = fread(msg, sizeof(char) * size, 1, file);
-            fclose(file);
+            fseek(file, 0, SEEK_SET);
             pw = open(pipeb, O_WRONLY);
             write(pw, "r", 1);
             close(pw);
@@ -65,6 +65,7 @@ int main(){
         //Liberacion de la memoria asignada al mensaje
         free(msg);
     }
+    fclose(file);
     //Se borran las tuverias nombradas creadas para la ejecucion
     unlink(pipea);
     unlink(pipeb);

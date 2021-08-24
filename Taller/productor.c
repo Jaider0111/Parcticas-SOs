@@ -21,6 +21,8 @@ int main(){
     int kb = 1024;
     //tamaños
     int sizes[] = {kb, 10*kb, 100*kb, kb*kb, 10*kb*kb, 100*kb*kb};
+    FILE *file;
+    file =fopen("file", "w");
     for(int j = 0; j < 6; j++){
         //Determina el tamaño de los datos a transmitir
         int size = sizes[j];
@@ -37,13 +39,11 @@ int main(){
         double total_time = 0;
         long int seconds, nanoseconds;
         //Apuntador al archivo
-        FILE *file;
         char c[2];
         for(int i = 0; i < reps; i++){
             clock_gettime(CLOCK_REALTIME, &begin);
-            file =fopen("file", "w");
             int r = fwrite(msg, sizeof(char) * size, 1, file);
-            fclose(file);
+            fseek(file, 0, SEEK_SET);
             pw = open(pipea, O_WRONLY);
             write(pw, "r", 1);
             close(pw);
@@ -66,5 +66,6 @@ int main(){
         //Liberacion de la memoria asignada al mensaje
         free(msg);
     }
+    fclose(file);
 	return 0;
 }

@@ -17,12 +17,7 @@
 
 int main(){
 	
-	key_t key = ftok ("/bin/ls", 33);
-	if (key == -1)
-	{
-		printf("No se pudo conseguir la clave para la memoria compartida");
-		exit(0);
-	}
+    key_t key = 1234;
 	
     //tuberia para el envio de los datos de consulta
     char *pipea = "/usr/pipea";
@@ -52,13 +47,19 @@ int main(){
     int kb = 1024;
     //tamaños
     int sizes[] = {kb, 10*kb, 100*kb, kb*kb, 10*kb*kb, 100*kb*kb};
-    
     //Creacion de la memoria compartida
-	int id_memory = shmget (key, sizeof(char)*100*kb*kb, PERMISSIONS);
+	int id_memory = shmget (key, sizeof(char)*kb*kb*kb, PERMISSIONS| IPC_CREAT);
+
 	if (id_memory == -1)
 	{
 		printf("No consigo Id para memoria compartida");
 
+		exit (0);
+	}
+	char *memory = (char *)shmat (id_memory, 0, 0) ; 
+
+	if (memory == NULL){
+		printf ( "Error al buscar la memoria compartida" ) ;
 		exit (0);
 	}
     
@@ -73,15 +74,11 @@ int main(){
 
         char c[2];
         for(int i = 0; i < reps; i++){
+            
             pr = open(pipea, O_RDONLY);
             r = read (pr, c, 2);
             close(pr);
                    
-            char *memory = (char *)shmat (id_memory, 0, 0) ; 
-			if (memory == NULL){
-				printf ( "Error al buscar la memoria compartida" ) ;
-				exit (0);
-			}
 			strcpy (msg, memory);
 			
             
@@ -92,6 +89,9 @@ int main(){
         //Liberacion de la memoria asignada al mensaje
         free(msg);
     }
+    shmdt (memory);
+	shmctl (id_memory, IPC_RMID, (struct shmid_ds *)NULL);
+
     //Se borran las tuverias nombradas creadas para la ejecucion
     unlink(pipea);
     unlink(pipeb);

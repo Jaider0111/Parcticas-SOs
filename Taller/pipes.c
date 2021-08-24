@@ -34,14 +34,27 @@ int main() {
     int reps = (bytes <= KB*KB) ? 20 : 8;
     double total_time;
     long int secs, nsecs;
-    clock_gettime(CLOCK_REALTIME, &begin);
-    for (int i = 0; i < reps; i++)
-      write(fda[WRITE], data, bytes);
-    read(fdb[READ], response, 2);
-    clock_gettime(CLOCK_REALTIME, &end);
-    secs = end.tv_sec - begin.tv_sec;
-    nsecs = end.tv_nsec - begin.tv_nsec;
-    total_time = secs + nsecs*(1e-9);
+    for (int i = 0; i < reps; i++) {
+      clock_gettime(CLOCK_REALTIME, &begin);
+      int wrt = 0;
+      int sz = bytes * sizeof(char);
+      while (wrt < sz) {
+      	int r = write(fda[WRITE], data, bytes);
+      	if (r > 0)
+            wrt += r;
+      	else {
+            if (r == 0)
+                printf("socket closed\n");
+	    else if (r == -1)
+	        printf("error writing to socket\n");
+        }
+      }	      
+      read(fdb[READ], response, 2);
+      clock_gettime(CLOCK_REALTIME, &end);
+      secs = end.tv_sec - begin.tv_sec;
+      nsecs = end.tv_nsec - begin.tv_nsec;
+      total_time += secs + nsecs*(1e-9);
+    }
     double avg = total_time / reps;
     if (bytes < KB*KB)
         printf("El tiempo promedio para transferir %3dKB es: %.10f segundos\n", bytes/KB, avg);
@@ -58,14 +71,23 @@ int main() {
         int bytes = sizes[s];
         char *data = (char *) malloc(bytes * sizeof(char));
         int reps = (bytes <= KB*KB) ? 20 : 8;
-
-        int len;
-        int received = 0;
 	for (int i = 0; i < reps; i++) {
-	   received += read(fda[READ], data, bytes);
-	}
-        printf("Received %d\n", received);
-        write(fdb[WRITE], "r", 1);
+	   int rd = 0;
+	   int sz = bytes * sizeof(char);
+	   while (rd < sz) {
+	       int r = read(fda[READ], data, bytes);
+	       if (r > 0)
+	           rd += r;
+	       else {
+	           if (r == 0)
+	               printf("socket closed\n");
+		   else if (r == -1)
+		       printf("error reading from socket\n");
+	       }
+	   }
+	   printf("Received %d\n", rd);
+	   write(fdb[WRITE], "r", 1);
+	}   
         free(data);
       }
       close(fda[READ]);

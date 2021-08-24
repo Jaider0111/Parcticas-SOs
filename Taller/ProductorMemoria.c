@@ -16,14 +16,8 @@
 #define PERMISSIONS 0666
 
 int main(){
-	printf ( "PASO" ) ; 	
-	// Creacion de clave para memoria compartida
+
 	key_t key = 1234;
-	if (key == -1)
-	{
-		printf("No se pudo conseguir la clave para la memoria compartida");
-		exit(0);
-	}
 	
 	
 	//tuberia para el envio de los datos de consulta
@@ -31,21 +25,27 @@ int main(){
     //tuberia para recibir el resultado de la consulta
     char *pipeb = "/usr/pipeb";
     
+    
     //pw y pr descriptores de archivo para las 2 tuberias anteriores
     int pw, pr, r, option;
     int kb = 1024;
     //tamaños
     int sizes[] = {kb, 10*kb, 100*kb, kb*kb, 10*kb*kb, 100*kb*kb};
-    printf ( "%d" , 100 * kb * kb ) ; 
+    
     //Creacion de la memoria compartida
-	int id_memory = shmget (key, sizeof(char)*100*kb*kb, PERMISSIONS| IPC_CREAT);
+	int id_memory = shmget (key, sizeof(char)*kb*kb*kb, PERMISSIONS);
 	if (id_memory == -1)
 	{
-		printf("No consigo Id para memoria compartida");
+		printf("No consigo Id para memoria compartida Productor");
 
 		exit (0);
 	}
     
+    char *memory = (char *)shmat (id_memory, 0, 0) ; 
+	if (memory == NULL){
+		printf ( "Error al buscar la memoria compartida" ) ;
+		exit (0);
+	}
     
     for(int j = 0; j < 6; j++){
         //Determina el tamaño de los datos a transmitir
@@ -58,35 +58,22 @@ int main(){
         double total_time = 0;
         long int seconds, nanoseconds;
         char c[2];
-        
         char *msg = (char *)malloc(sizeof(char) * size);
-
 		for ( int d = 0 ; d < size ; d++ ) {
 			msg [ d ] = '1' ; 
-			
 		}
+		
         for(int i = 0; i < reps; i++){
             
             clock_gettime(CLOCK_REALTIME, &begin);
-			
-			char *memory = (char *)shmat (id_memory, 0, 0) ; 
-			if (memory == NULL){
-				printf ( "Error al buscar la memoria compartida" ) ;
-				exit (0);
-			}
 			strcpy (memory, msg);
-			 
-			shmdt (memory);
-
             pw = open(pipea, O_WRONLY);
             write(pw, "r", 1);
             close(pw);
             pr = open(pipeb, O_RDONLY);
             r = read(pr, c, 2);
             close(pr);
-            
             clock_gettime(CLOCK_REALTIME, &end);
-            
             seconds = end.tv_sec - begin.tv_sec;
             nanoseconds = end.tv_nsec - begin.tv_nsec;
             total_time += seconds + nanoseconds*(1e-9);
@@ -100,9 +87,7 @@ int main(){
             size /= kb*kb;
             printf("El tiempo promedio para compatir %3dMB es: %.10f segundos\n", size, prom);
         }
-        //Liberación memoria compartida
     }
-	shmctl (id_memory, IPC_RMID, (struct shmid_ds *)NULL);
-
+	shmdt (memory);
 	return 0;
 }

@@ -68,7 +68,8 @@ int main(){
         //Determina el tamaño de los datos a transmitir
         int size = sizes[j];
         //puntero hacia el mensaje que se va a recibir y  asignacion de la memoria necesaria para el mensaje
-        char *msg = (char *)malloc(sizeof(char) * size);
+	char *msg = (char *)malloc(sizeof(char) * kb*kb*kb);
+
 
         //numero de veces que se repitira la recepcion
         int reps = (size <= 1000000) ? 20 : 8;

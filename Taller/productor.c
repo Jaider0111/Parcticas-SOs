@@ -10,29 +10,32 @@
 
 #define PERMISSIONS 0666
 
-int main(){
-   //tuberia para el envio de los datos de consulta
+int main()
+{
+    //tuberia para el envio de los datos de consulta
     char *pipea = "/usr/pipea";
     //tuberia para recibir el resultado de la consulta
     char *pipeb = "/usr/pipeb";
-    
+
     //pw y pr descriptores de archivo para las 2 tuberias anteriores
     int pw, pr, r, option;
     int kb = 1024;
     //tamaños
-    int sizes[] = {kb, 10*kb, 100*kb, kb*kb, 10*kb*kb, 100*kb*kb};
+    int sizes[] = {kb, 10 * kb, 100 * kb, kb * kb, 10 * kb * kb, 100 * kb * kb};
     FILE *file;
-    file =fopen("file", "w");
-    for(int j = 0; j < 6; j++){
+    file = fopen("file", "w");
+    for (int j = 0; j < 6; j++)
+    {
         //Determina el tamaño de los datos a transmitir
         int size = sizes[j];
         char *msg = (char *)malloc(sizeof(char) * size);
         //llenado del mensaje
-        for(int i = 0; i < size; i++){
+        for (int i = 0; i < size; i++)
+        {
             msg[i] = '1';
         }
         //Variables para contar el tiempo
-        struct timespec begin, end; 
+        struct timespec begin, end;
         //numero de ve10ces que se repitira la transmicion
         int reps = (size <= 1000000) ? 20 : 8;
         //variable para la suma de los tiempos
@@ -40,7 +43,8 @@ int main(){
         long int seconds, nanoseconds;
         //Apuntador al archivo
         char c[2];
-        for(int i = 0; i < reps; i++){
+        for (int i = 0; i < reps; i++)
+        {
             clock_gettime(CLOCK_REALTIME, &begin);
             int r = fwrite(msg, sizeof(char) * size, 1, file);
             fseek(file, 0, SEEK_SET);
@@ -53,19 +57,22 @@ int main(){
             clock_gettime(CLOCK_REALTIME, &end);
             seconds = end.tv_sec - begin.tv_sec;
             nanoseconds = end.tv_nsec - begin.tv_nsec;
-            total_time += seconds + nanoseconds*(1e-9);
+            total_time += seconds + nanoseconds * (1e-9);
         }
         double prom = total_time / reps;
-        if(size < 1000000){
+        if (size < 1000000)
+        {
             size /= kb;
             printf("El tiempo promedio para compatir %3dKB es: %.10f segundos\n", size, prom);
-        }else{
-            size /= kb*kb;
+        }
+        else
+        {
+            size /= kb * kb;
             printf("El tiempo promedio para compatir %3dMB es: %.10f segundos\n", size, prom);
         }
         //Liberacion de la memoria asignada al mensaje
         free(msg);
     }
     fclose(file);
-	return 0;
+    return 0;
 }

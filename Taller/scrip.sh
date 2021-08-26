@@ -10,8 +10,8 @@ sudo ./pipes
 echo -e "\n\nTransferencia usando Archivos"
 gcc -o consumidor consumidor.c -lm
 gcc -o productor productor.c -lm
-./consumidor &
-./productor
+sudo ./consumidor &
+sudo ./productor
 echo -e "\n\nTransferencia usando sockets"
 gcc socketp.c -o socketp -lpthread -lm
 sudo ./socketp &
@@ -20,5 +20,5 @@ sudo ./socketc
 echo -e "\n\nTransferencia usando memoria compartida"
 gcc -o ConsumidorMemoria ConsumidorMemoria.c -lm
 gcc -o ProductorMemoria ProductorMemoria.c -lm
-./ConsumidorMemoria &
-./ProductorMemoria
+sudo ./ConsumidorMemoria &
+sudo ./ProductorMemoria

@@ -85,7 +85,6 @@ int main() {
 		       printf("error reading from socket\n");
 	       }
 	   }
-	   printf("Received %d\n", rd);
 	   write(fdb[WRITE], "r", 1);
 	}   
         free(data);
